@@ -1,6 +1,6 @@
 package com.example.shoppinglist.domain
 
-data class Shopitem(
+data class ShopItem(
 
     val name: String,
     val count: Int,
