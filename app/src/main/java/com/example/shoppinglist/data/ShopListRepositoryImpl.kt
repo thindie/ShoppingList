@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.shoppinglist.domain.ShopListRepository
 import com.example.shoppinglist.domain.ShopItem
+import kotlin.random.Random
 
 object ShopListRepositoryImpl : ShopListRepository {
 
@@ -12,8 +13,8 @@ object ShopListRepositoryImpl : ShopListRepository {
     private var autoIncrementId = -1
 
             init {
-                for(i in 1 .. 1000)
-                    addShopItem(ShopItem("Покупка $i ",i,true, autoIncrementId))
+                for(i in 1 .. 10000)
+                    addShopItem(ShopItem("Покупка $i ",i, Random.nextBoolean(), autoIncrementId))
             }
 
     override fun addShopItem(item: ShopItem) {
@@ -26,11 +27,13 @@ object ShopListRepositoryImpl : ShopListRepository {
     }
 
     override fun editShopItem(item: ShopItem) {
+
         val oldShopitem = getShopItem(item.id)
         shopList.remove(oldShopitem)
         addShopItem(item)
 
     }
+
 
     override fun getShopItem(value: Int): ShopItem {
         return shopList.find {

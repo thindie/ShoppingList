@@ -2,54 +2,37 @@ package com.example.shoppinglist.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinglist.R
-import com.example.shoppinglist.domain.ShopItem
+
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var viewModel: MainViewModel
-    private lateinit var linearLayout_shopList : LinearLayout
+    private lateinit var adapter: ShopListAdapter
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_main)
+        setupRecyclerView()
 
-        viewModel = ViewModelProvider(this)
+
+          viewModel = ViewModelProvider(this)
             .get(MainViewModel::class.java)
 
-        linearLayout_shopList = findViewById(R.id.lin_lay_shop_list)
-        viewModel.shopList.observe(this){
-
-            showList(it)
+        viewModel.shopList.observe(this) {
+            adapter.listOfShopItem = it
         }
-
     }
-    private fun showList(list: List<ShopItem>){
-        linearLayout_shopList.removeAllViews()
-        for (item in list){
-            val layoutId =
-                if(item.enabled)
-                R.layout.item_shop_enabled
-            else
-                R.layout.item_shop_disabled
-            val view = LayoutInflater.from(this)
-                .inflate(layoutId, linearLayout_shopList, false)
-            val shopItemLayoutName = view.findViewById<TextView>(R.id.tv_name)
-            val shopItemLayoutCount = view.findViewById<TextView>(R.id.tv_count)
-            shopItemLayoutName.text = item.name
-            shopItemLayoutCount.text = item.count.toString()
 
-            view.setOnClickListener{
-                viewModel.changeEnabledState(item)
+    private fun setupRecyclerView(){
+        val recyclerViewShoppingList = findViewById<RecyclerView>(R.id.rv_shop_list)
+        adapter = ShopListAdapter()
+        recyclerViewShoppingList.adapter = adapter
+        recyclerViewShoppingList.recycledViewPool.setMaxRecycledViews(ShopListAdapter.ENABLED, ShopListAdapter.MAX_POOL_SIZE)
+        recyclerViewShoppingList.recycledViewPool.setMaxRecycledViews(ShopListAdapter.DISABLED, ShopListAdapter.MAX_POOL_SIZE)
 
-            }
-
-            linearLayout_shopList.addView(view)
-        }
     }
 }
