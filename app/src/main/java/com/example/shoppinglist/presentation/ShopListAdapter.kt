@@ -3,6 +3,7 @@ package com.example.shoppinglist.presentation
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -11,12 +12,15 @@ import com.example.shoppinglist.domain.ShopItem
 
 class ShopListAdapter
     : RecyclerView.Adapter<ShopListAdapter.ShoppingListViewHolder>(){
-    private var count = 0
+     private var count = 0
+
      var listOfShopItem = listOf<ShopItem>()
             set(value) {
                 field = value
                 notifyDataSetChanged()
             }
+     var onShopItemLongClickListener : ((ShopItem) -> Unit)? = null
+     var onShopItemClickListener : ((ShopItem) -> Unit)? = null
 
     class ShoppingListViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val shopItemName = view.findViewById<TextView>(R.id.tv_name)
@@ -40,6 +44,15 @@ class ShopListAdapter
 
     override fun onBindViewHolder(holder: ShoppingListViewHolder, position: Int) {
         val shopItem = listOfShopItem[position]
+        holder.itemView.setOnLongClickListener{
+            onShopItemLongClickListener?.invoke(shopItem)
+            false
+        }
+        holder.itemView.setOnClickListener{
+            onShopItemClickListener?.invoke(shopItem)
+        }
+
+
         holder.shopItemName.text = shopItem.name
         holder.shopItemCount.text = shopItem.count.toString()
 
@@ -56,9 +69,8 @@ class ShopListAdapter
 
     companion object{
         const val MAX_POOL_SIZE = 20
-        const val ENABLED = 3748139
-        const val DISABLED = 91246139
+        const val SHOPITEM_ENABLED = 3748139
+        const val SHOPITEM_DISABLED = 91246139
     }
-
 
 }
