@@ -6,6 +6,7 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinglist.R
 import com.example.shoppinglist.domain.ShopItem
@@ -16,8 +17,12 @@ class ShopListAdapter
 
      var listOfShopItem = listOf<ShopItem>()
             set(value) {
+                val callbackDiffer = ShopListDiffCallback(listOfShopItem,value)
+                DiffUtil.calculateDiff(callbackDiffer)
+                    .dispatchUpdatesTo(this)
+
                 field = value
-                notifyDataSetChanged()
+
             }
      var onShopItemLongClickListener : ((ShopItem) -> Unit)? = null
      var onShopItemClickListener : ((ShopItem) -> Unit)? = null
@@ -41,6 +46,7 @@ class ShopListAdapter
         else throw RuntimeException("unknown viewType $viewType")
     }
     override fun onBindViewHolder(holder: ShoppingListViewHolder, position: Int) {
+        Log.d("ShopListAdapter","onBindViewHolder = ${++count}")
         val shopItem = listOfShopItem[position]
         holder.itemView.setOnLongClickListener{
             onShopItemLongClickListener?.invoke(shopItem)
