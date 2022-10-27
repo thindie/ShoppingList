@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
     private lateinit var shopListAdapter: ShopListAdapter
 
-
+    //on create
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
             shopListAdapter.listOfShopItem = it
         }
     }
-
+    //SETTING UP RECYCLER VIEW with CARDVIEWs inside
     private fun setupRecyclerView() {
         shopListAdapter = ShopListAdapter()
         val recyclerViewShoppingList = findViewById<RecyclerView>(R.id.rv_shop_list)
@@ -40,12 +40,19 @@ class MainActivity : AppCompatActivity() {
             recycledViewPool
                 .setMaxRecycledViews(ShopListAdapter.SHOPITEM_DISABLED, ShopListAdapter.MAX_POOL_SIZE)
         }
-        shopListAdapter.onShopItemLongClickListener = {it -> viewModel.changeEnabledState(it)}
-        shopListAdapter.onShopItemClickListener = {it -> Log.d("onShopItemClickListener", "${it.name} status")}
+        setterOnClickListeners()
         setItemTouchHelper(recyclerViewShoppingList)
     }
+    //SETTING ONCLICK (for long and short clicks) LISTENERS
+    private fun setterOnClickListeners() {
+        shopListAdapter.onShopItemLongClickListener = { it -> viewModel.changeEnabledState(it) }
+        shopListAdapter.onShopItemClickListener =
+            { it -> Log.d("onShopItemClickListener", "${it.name} status") }
+    }
+    //SWIPE TO DELETE
     private fun setItemTouchHelper(recyclerView: RecyclerView){
-        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT)
+        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT
+                or ItemTouchHelper.LEFT)
         {
             override fun onMove(
                 recyclerView: RecyclerView,
@@ -65,7 +72,8 @@ class MainActivity : AppCompatActivity() {
                         deletedShopItem = adapter.listOfShopItem[viewHolderAdapterPosition]
                         viewModel.removeShopItem(deletedShopItem)
                         adapter.notifyItemRemoved(viewHolderAdapterPosition)
-                        Snackbar.make(viewHolder.itemView,"deleted ${deletedShopItem.name}", Snackbar.LENGTH_LONG).show()
+                        Snackbar.make(viewHolder.itemView,"deleted ${deletedShopItem.name}",
+                            Snackbar.LENGTH_LONG).show()
                     }
 
 
