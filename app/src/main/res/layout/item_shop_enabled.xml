@@ -38,4 +38,5 @@
             android:textStyle="bold"
             tools:text="1" />
     </LinearLayout>
+
 </androidx.cardview.widget.CardView>

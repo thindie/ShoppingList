@@ -52,7 +52,6 @@ class ShopListAdapter
             onShopItemClickListener?.invoke(shopItem)
         }
 
-
         holder.shopItemName.text = shopItem.name
         holder.shopItemCount.text = shopItem.count.toString()
 
