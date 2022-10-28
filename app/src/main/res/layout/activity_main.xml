@@ -4,15 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#DAAAF9"
+    android:backgroundTint="#DAAAF9"
     tools:context=".presentation.MainActivity">
-
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_shop_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#C55D0E"
+        android:background="#00A936F4"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -26,14 +27,13 @@
         android:id="@+id/button_add_shop_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:backgroundTint="#FFC107"
-        app:rippleColor="#FF5722"
         android:layout_marginEnd="10dp"
-        android:layout_marginTop="10dp"
+        android:clickable="true"
+        android:contentDescription="add shop item"
+        android:focusable="true"
+        app:backgroundTint="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:clickable="true"
-        android:focusable="true"
-        android:contentDescription="add shop item"/>
+        app:rippleColor="#5EF8F8F3" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

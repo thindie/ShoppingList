@@ -3,22 +3,18 @@ package com.example.shoppinglist.presentation
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinglist.R
 import com.example.shoppinglist.domain.ShopItem
 
 class ShopListAdapter
-    : RecyclerView.Adapter<ShopListAdapter.ShoppingListViewHolder>(){
+    : ListAdapter<ShopItem, ShopListAdapter.ShoppingListViewHolder>(ShopItemDiffCallback()){
      private var count = 0
 
-     var listOfShopItem = listOf<ShopItem>()
-            set(value) {
-                field = value
-                notifyDataSetChanged()
-            }
+
      var onShopItemLongClickListener : ((ShopItem) -> Unit)? = null
      var onShopItemClickListener : ((ShopItem) -> Unit)? = null
 
@@ -33,6 +29,7 @@ class ShopListAdapter
                .inflate(R.layout.item_shop_enabled,parent,false)
             return ShoppingListViewHolder(view)
         }
+
         if(viewType == SHOPITEM_DISABLED){
             val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_shop_disabled,parent,false)
@@ -41,7 +38,7 @@ class ShopListAdapter
         else throw RuntimeException("unknown viewType $viewType")
     }
     override fun onBindViewHolder(holder: ShoppingListViewHolder, position: Int) {
-        val shopItem = listOfShopItem[position]
+        val shopItem = getItem(position)
         holder.itemView.setOnLongClickListener{
             onShopItemLongClickListener?.invoke(shopItem)
             false
@@ -53,10 +50,10 @@ class ShopListAdapter
         holder.shopItemCount.text = shopItem.count.toString()
     }
     override fun getItemCount(): Int {
-        return listOfShopItem.size
+        return currentList.size
     }
     override fun getItemViewType(position: Int): Int {
-        val shopItem = listOfShopItem[position]
+        val shopItem = getItem(position)
         return if(shopItem.enabled) 3748139 else 91246139
     }
     companion object{
