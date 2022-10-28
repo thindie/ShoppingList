@@ -7,8 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinglist.R
 import androidx.recyclerview.widget.ItemTouchHelper
-import com.example.shoppinglist.domain.ShopItem
-import com.google.android.material.snackbar.Snackbar
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -25,7 +24,7 @@ class MainActivity : AppCompatActivity() {
             .get(MainViewModel::class.java)
 
         viewModel.shopList.observe(this) {
-            shopListAdapter.listOfShopItem = it
+            shopListAdapter.submitList(it)
         }
     }
     //SETTING UP RECYCLER VIEW with CARDVIEWs inside
@@ -64,19 +63,13 @@ class MainActivity : AppCompatActivity() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val viewHolderAdapterPosition = viewHolder.adapterPosition
-                val deletedShopItem : ShopItem
-                val adapter = recyclerView.adapter
+                val deletedShopItem = shopListAdapter.
+                currentList[viewHolderAdapterPosition]
 
-                if(adapter is ShopListAdapter)
-                    {
-                        deletedShopItem = adapter.listOfShopItem[viewHolderAdapterPosition]
-                        viewModel.removeShopItem(deletedShopItem)
-                        adapter.notifyItemRemoved(viewHolderAdapterPosition)
-                        Snackbar.make(viewHolder.itemView,"deleted ${deletedShopItem.name}",
-                            Snackbar.LENGTH_LONG).show()
-                    }
-
-
+                viewModel.removeShopItem(deletedShopItem)
+                shopListAdapter.notifyItemRemoved(viewHolderAdapterPosition)
+                   //     Snackbar.make(viewHolder.itemView,"DELETED ${deletedShopItem.name}",
+                   //        Snackbar.LENGTH_SHORT).show()
             }
         }).attachToRecyclerView(recyclerView)
     }}
