@@ -12,7 +12,7 @@ import com.example.shoppinglist.domain.ShopItem
 
 class ShopListAdapter
     : ListAdapter<ShopItem, ShopListAdapter.ShoppingListViewHolder>(ShopItemDiffCallback()){
-     private var count = 0
+
 
 
      var onShopItemLongClickListener : ((ShopItem) -> Unit)? = null
@@ -23,7 +23,6 @@ class ShopListAdapter
         val shopItemCount = view.findViewById<TextView>(R.id.tv_count)
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShoppingListViewHolder {
-        Log.d("ShopListAdapter","onCreateViewHolder = ${++count}")
         if(viewType == SHOPITEM_ENABLED){
            val view = LayoutInflater.from(parent.context)
                .inflate(R.layout.item_shop_enabled,parent,false)
