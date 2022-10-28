@@ -21,7 +21,6 @@ object ShopListRepositoryImpl : ShopListRepository {
     override fun addShopItem(item: ShopItem) {
         if(autoIncrementId == ShopItem.UNDEFINED_VAL){
             item.id = autoIncrementId++
-            Log.d("AutoIncrement","addShopItem Incr")
         }
         shopList.add(item)
         updateList()
