@@ -27,4 +27,8 @@ class MainViewModel : ViewModel() {
         val stateChanged = ShopItem(shopItem.name, shopItem.count, !shopItem.enabled, shopItem.id)
         editShopItemUseCase.editShopItem(stateChanged)
     }
+
+    fun editShopItem(shopItem: ShopItem){
+
+    }
 }
