@@ -1,13 +1,13 @@
 package com.example.shoppinglist.presentation
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinglist.R
 import androidx.recyclerview.widget.ItemTouchHelper
-
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 
 class MainActivity : AppCompatActivity() {
@@ -19,12 +19,21 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         setupRecyclerView()
           viewModel = ViewModelProvider(this)
             .get(MainViewModel::class.java)
 
         viewModel.shopList.observe(this) {
             shopListAdapter.submitList(it)
+        }
+        val buttonAddItem = findViewById<FloatingActionButton>(R.id.floatingActionButton)
+        buttonAddItem.setOnClickListener {
+            val intent = Intent(
+                this, ShopItemActivity::class.java
+            )
+            intent.putExtra("extra_mode", " mode_add")
+            startActivity(intent)
         }
     }
     //SETTING UP RECYCLER VIEW with CARDVIEWs inside
@@ -39,14 +48,22 @@ class MainActivity : AppCompatActivity() {
             recycledViewPool
                 .setMaxRecycledViews(ShopListAdapter.SHOPITEM_DISABLED, ShopListAdapter.MAX_POOL_SIZE)
         }
-        setterOnClickListeners()
+        setterOnLongClickListener()
+        setOnTapOnShopItem()
         setItemTouchHelper(recyclerViewShoppingList)
     }
     //SETTING ONCLICK (for long and short clicks) LISTENERS
-    private fun setterOnClickListeners() {
+    private fun setterOnLongClickListener() {
         shopListAdapter.onShopItemLongClickListener = { it -> viewModel.changeEnabledState(it) }
+
+    }
+    private fun setOnTapOnShopItem(){
         shopListAdapter.onShopItemClickListener =
-            { it -> Log.d("onShopItemClickListener", "${it.name} status") }
+            {  val intent = Intent(
+                this, ShopItemActivity::class.java
+            )
+                intent.putExtra("extra_mode", " mode_edit")
+                startActivity(intent) }
     }
     //SWIPE TO DELETE
     private fun setItemTouchHelper(recyclerView: RecyclerView){
