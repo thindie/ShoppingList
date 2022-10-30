@@ -16,8 +16,9 @@
             android:name=".presentation.MainActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name=".presentation.ShopItemActivity"
-                    android:windowSoftInputMode= "adjustResize"/>
+                <action
+                    android:name=".presentation.ShopItemActivity"
+                    android:windowSoftInputMode="adjustResize" />
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -32,8 +33,9 @@
             android:name=".presentation.ShopItemActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name=".presentation.ShopItemActivity"
-                    android:windowSoftInputMode= "adjustResize"/>
+                <action
+                    android:name=".presentation.ShopItemActivity"
+                    android:windowSoftInputMode="adjustResize" />
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
