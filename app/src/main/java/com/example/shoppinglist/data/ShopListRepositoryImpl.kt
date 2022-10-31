@@ -10,18 +10,16 @@ import kotlin.random.Random
 object ShopListRepositoryImpl : ShopListRepository {
 
     private val shopListLD = MutableLiveData<List<ShopItem>>()
-    private val shopList = sortedSetOf<ShopItem>({o1,o2 -> o1.id.compareTo(o2.id)})
-    private var autoIncrementId = 0
+    private val shopList = sortedSetOf<ShopItem>({ o1, o2 -> o1.id.compareTo(o2.id) })
+    private var autoIncrementId = -1
 
-            init {
+     init {
                 for(i in 1 .. 10)
                     addShopItem(ShopItem("Покупка $i ",i, Random.nextBoolean(), i))
             }
 
     override fun addShopItem(item: ShopItem) {
-        if(autoIncrementId == ShopItem.UNDEFINED_VAL){
-            item.id = autoIncrementId++
-        }
+
         shopList.add(item)
         updateList()
     }
@@ -37,9 +35,9 @@ object ShopListRepositoryImpl : ShopListRepository {
 
     override fun getShopItem(value: Int): ShopItem {
         return shopList.find {
-            it.id == value } ?:
-            throw RuntimeException("didn't find that thing with $value")
-   }
+            it.id == value
+        } ?: throw RuntimeException("didn't find that thing with $value")
+    }
 
     override fun getShopList(): LiveData<List<ShopItem>> {
         return shopListLD
@@ -50,7 +48,7 @@ object ShopListRepositoryImpl : ShopListRepository {
         updateList()
     }
 
-    private fun updateList(){
+    private fun updateList() {
         shopListLD.value = shopList.toList()
     }
 }

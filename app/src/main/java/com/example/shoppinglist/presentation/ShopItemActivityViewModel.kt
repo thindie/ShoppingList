@@ -4,7 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.shoppinglist.data.ShopListRepositoryImpl
-import com.example.shoppinglist.domain.*
+import com.example.shoppinglist.domain.AddShopItemUseCase
+import com.example.shoppinglist.domain.EditShopItemUseCase
+import com.example.shoppinglist.domain.GetShopItemByIdUseCase
+import com.example.shoppinglist.domain.ShopItem
 
 class ShopItemActivityViewModel : ViewModel() {
 
@@ -43,7 +46,7 @@ class ShopItemActivityViewModel : ViewModel() {
         val isDataOk = validateInput(nameToAdd, countToAdd)
         if (isDataOk) {
             val shopItemToAdd =
-                ShopItem(nameToAdd, countToAdd, true, 0)
+                ShopItem(nameToAdd, countToAdd, true)
             addShopItemUseCase.addShopItem(shopItemToAdd)
             finishScreen()
         }
