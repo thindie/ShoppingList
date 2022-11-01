@@ -21,6 +21,7 @@ class ShopItemActivity : AppCompatActivity() {
     private var          screenMode = UNDEFINED_STRING
     private var          shopItemID = UNDEFINED_VAL
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shop_item)
@@ -28,9 +29,49 @@ class ShopItemActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)
             .get(ShopItemActivityViewModel::class.java)
         initViews()
-        when(screenMode){
-            MODE_EDIT -> TODO()
-            MODE_ADD -> TODO()
+
+        when (screenMode) {
+            MODE_EDIT -> onModeEdit()
+            MODE_ADD -> onModeAdd()
+        }
+    }
+
+    private fun onModeEdit() {
+        viewModel.getShopItem(shopItemID)
+        viewModel.shopItem.observe(this) {
+            val item = it
+            textInput.editText?.setText(item.name)
+            countInput.editText?.setText(item.count.toString())
+
+            button.setOnClickListener {
+                val newName = textEdit.text
+                val newCount = countEdit.text.toString().toInt()
+                val newShowItem = item.copy(name = newName.toString(), count = newCount)
+                viewModel.editShopItem(newShowItem)
+                viewModel.shouldCloseScreen.observe(this) {
+
+                    if (viewModel.shouldCloseScreen.value == Unit)
+                        this.finish()
+                }
+            }
+        }
+    }
+
+    private fun onModeAdd() {
+        var name: String = UNDEFINED_STRING
+        var count: String = UNDEFINED_STRING
+        button.setOnClickListener {
+            name = textInput.editText?.text.toString()
+            count = countInput.editText?.text.toString()
+            viewModel.addShopItem(name, count)
+            viewModel.shouldCloseScreen.observe(this) {
+                if(viewModel.shouldCloseScreen.value == Unit){
+                    this.finish()
+
+                }
+
+            }
+
         }
     }
 
@@ -39,6 +80,7 @@ class ShopItemActivity : AppCompatActivity() {
             throw
             RuntimeException("$intent : Param screen mode is absent")
         }
+
 
         val mode = intent.getStringExtra(EXTRA_SCREEN_MODE)
 
@@ -51,7 +93,9 @@ class ShopItemActivity : AppCompatActivity() {
             RuntimeException("$screenMode has not ID given")
         }
 
+
         if(screenMode == MODE_EDIT){
+
             shopItemID = intent.getIntExtra(EXTRA_SHOP_ITEM_ID, UNDEFINED_VAL)
         }
 

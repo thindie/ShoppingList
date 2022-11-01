@@ -46,7 +46,7 @@ class ShopItemActivityViewModel : ViewModel() {
         val isDataOk = validateInput(nameToAdd, countToAdd)
         if (isDataOk) {
             val shopItemToAdd =
-                ShopItem(nameToAdd, countToAdd, true, 0)
+                ShopItem(nameToAdd, countToAdd, true)
             addShopItemUseCase.addShopItem(shopItemToAdd)
             finishScreen()
         }
