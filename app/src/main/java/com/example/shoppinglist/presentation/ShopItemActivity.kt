@@ -18,8 +18,9 @@ class ShopItemActivity : AppCompatActivity() {
     private lateinit var textEdit: EditText
     private lateinit var countEdit: EditText
     private lateinit var button: Button
-    private var screenMode = UNDEFINED_STRING
-    private var shopItemID = UNDEFINED_VAL
+    private var          screenMode = UNDEFINED_STRING
+    private var          shopItemID = UNDEFINED_VAL
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +29,7 @@ class ShopItemActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)
             .get(ShopItemActivityViewModel::class.java)
         initViews()
+
         when (screenMode) {
             MODE_EDIT -> onModeEdit()
             MODE_ADD -> onModeAdd()
@@ -69,6 +71,7 @@ class ShopItemActivity : AppCompatActivity() {
                 }
 
             }
+
         }
     }
 
@@ -77,6 +80,7 @@ class ShopItemActivity : AppCompatActivity() {
             throw
             RuntimeException("$intent : Param screen mode is absent")
         }
+
 
         val mode = intent.getStringExtra(EXTRA_SCREEN_MODE)
 
@@ -89,7 +93,9 @@ class ShopItemActivity : AppCompatActivity() {
             RuntimeException("$screenMode has not ID given")
         }
 
-        if (screenMode == MODE_EDIT) {
+
+        if(screenMode == MODE_EDIT){
+
             shopItemID = intent.getIntExtra(EXTRA_SHOP_ITEM_ID, UNDEFINED_VAL)
         }
 

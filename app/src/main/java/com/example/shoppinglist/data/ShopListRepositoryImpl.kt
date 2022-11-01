@@ -1,24 +1,28 @@
 package com.example.shoppinglist.data
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.shoppinglist.domain.ShopListRepository
 import com.example.shoppinglist.domain.ShopItem
+import com.example.shoppinglist.domain.ShopListRepository
 import kotlin.random.Random
 
 object ShopListRepositoryImpl : ShopListRepository {
 
     private val shopListLD = MutableLiveData<List<ShopItem>>()
     private val shopList = sortedSetOf<ShopItem>({ o1, o2 -> o1.id.compareTo(o2.id) })
-    private var autoIncrementId = -1
 
-     init {
-                for(i in 1 .. 10)
-                    addShopItem(ShopItem("Покупка $i ",i, Random.nextBoolean(), i))
-            }
+
+    private var autoIncrementId = 0
+
+    init {
+        for (i in 1..10)
+            addShopItem(ShopItem("Покупка $i ", i, Random.nextBoolean(), i))
+    }
 
     override fun addShopItem(item: ShopItem) {
+        if (autoIncrementId == ShopItem.UNDEFINED_VAL) {
+            item.id = autoIncrementId++
+        }
 
         shopList.add(item)
         updateList()

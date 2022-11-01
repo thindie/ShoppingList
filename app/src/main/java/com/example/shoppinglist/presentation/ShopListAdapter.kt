@@ -1,6 +1,5 @@
 package com.example.shoppinglist.presentation
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -37,6 +36,7 @@ class ShopListAdapter
             return ShoppingListViewHolder(view)
         } else throw RuntimeException("unknown viewType $viewType")
     }
+
     override fun onBindViewHolder(holder: ShoppingListViewHolder, position: Int) {
         val shopItem = getItem(position)
         holder.itemView.setOnLongClickListener {
@@ -49,14 +49,17 @@ class ShopListAdapter
         holder.shopItemName.text = shopItem.name
         holder.shopItemCount.text = shopItem.count.toString()
     }
+
     override fun getItemCount(): Int {
         return currentList.size
     }
+
     override fun getItemViewType(position: Int): Int {
         val shopItem = getItem(position)
         return if (shopItem.enabled) 3748139 else 91246139
     }
-    companion object{
+
+    companion object {
         const val MAX_POOL_SIZE = 20
         const val SHOPITEM_ENABLED = 3748139
         const val SHOPITEM_DISABLED = 91246139

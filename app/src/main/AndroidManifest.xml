@@ -36,7 +36,11 @@
                 <action
                     android:name=".presentation.ShopItemActivity"
                     android:windowSoftInputMode="adjustResize" />
+
                 <action android:name="android.intent.action.PICK_ACTIVITY" />
+
+               // <action android:name="android.intent.action.MAIN" />
+
             </intent-filter>
         </activity>
     </application>
