@@ -12,18 +12,17 @@ object ShopListRepositoryImpl : ShopListRepository {
     private val shopList = sortedSetOf<ShopItem>({ o1, o2 -> o1.id.compareTo(o2.id) })
 
 
-    private var autoIncrementId = 0
+    private var autoIncrementId = -1
 
     init {
         for (i in 1..10)
-            addShopItem(ShopItem("Покупка $i ", i, Random.nextBoolean(), i))
+            addShopItem(ShopItem("Покупка $i ", i, Random.nextBoolean()))
     }
 
     override fun addShopItem(item: ShopItem) {
-        if (autoIncrementId == ShopItem.UNDEFINED_VAL) {
-            item.id = autoIncrementId++
+        if (item.id == ShopItem.UNDEFINED_VAL) {
+            item.id = ++autoIncrementId
         }
-
         shopList.add(item)
         updateList()
     }

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinglist.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 
 
 class MainActivity : AppCompatActivity() {
@@ -28,7 +29,8 @@ class MainActivity : AppCompatActivity() {
             shopListAdapter.submitList(it)
         }
         val buttonAddItem = findViewById<FloatingActionButton>(
-            R.id.floatingActionButton)
+            R.id.floatingActionButton
+        )
         buttonAddItem.setOnClickListener {
             val intent = ShopItemActivity.newIntentAddItem(this)
             startActivity(intent)
@@ -39,7 +41,8 @@ class MainActivity : AppCompatActivity() {
     private fun setupRecyclerView() {
         shopListAdapter = ShopListAdapter()
         val recyclerViewShoppingList = findViewById<RecyclerView>(
-            R.id.rv_shop_list)
+            R.id.rv_shop_list
+        )
         recyclerViewShoppingList.adapter = shopListAdapter
         with(recyclerViewShoppingList) {
 
@@ -62,7 +65,9 @@ class MainActivity : AppCompatActivity() {
     //SETTING ONCLICK (for long and short clicks) LISTENERS
     private fun setterOnLongClickListener() {
         shopListAdapter.onShopItemLongClickListener = { it
-            -> viewModel.changeEnabledState(it) }
+            ->
+            viewModel.changeEnabledState(it)
+        }
 
     }
 
@@ -90,14 +95,18 @@ class MainActivity : AppCompatActivity() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val viewHolderAdapterPosition = viewHolder.adapterPosition
+
                 val deletedShopItem = shopListAdapter
                     .currentList[viewHolderAdapterPosition]
-
                 viewModel.removeShopItem(deletedShopItem)
                 shopListAdapter
                     .notifyItemRemoved(viewHolderAdapterPosition)
-                //     Snackbar.make(viewHolder.itemView,"DELETED ${deletedShopItem.name}",
-                //        Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(
+                    viewHolder.itemView, "больше не нужна нам ${deletedShopItem.name}",
+                    Snackbar.LENGTH_SHORT
+                ).setAction(
+                    "НУЖНА!"
+                ) { viewModel.addShopItem(deletedShopItem) }.show()
             }
         }).attachToRecyclerView(recyclerView)
     }

@@ -59,9 +59,7 @@ class ShopItemActivityViewModel : ViewModel() {
         _shopItem.postValue(item)
     }
 
-    fun editShopItem(shopItem: ShopItem) {
-        val name = shopItem.name
-        val count = shopItem.count.toString()
+    fun editShopItem(name: String?, count: String?) {
         val nameToAdd = parseName(name)
         val countToAdd = parseCount(count)
         val isDataOk = validateInput(nameToAdd, countToAdd)
