@@ -3,6 +3,8 @@ package com.example.shoppinglist.presentation;
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
@@ -18,8 +20,8 @@ class ShopItemActivity : AppCompatActivity() {
     private lateinit var textEdit: EditText
     private lateinit var countEdit: EditText
     private lateinit var button: Button
-    private var          screenMode = UNDEFINED_STRING
-    private var          shopItemID = UNDEFINED_VAL
+    private var screenMode = UNDEFINED_STRING
+    private var shopItemID = UNDEFINED_VAL
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,50 +31,98 @@ class ShopItemActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this)
             .get(ShopItemActivityViewModel::class.java)
         initViews()
+        setFieldsErrorListeners()
+        settingActivityMode()
+    }
 
+    private fun settingActivityMode(){
         when (screenMode) {
             MODE_EDIT -> onModeEdit()
             MODE_ADD -> onModeAdd()
         }
+
+        viewModel.shouldCloseScreen.observe(this){
+            finish()
+        }
+    }
+
+
+    private fun setFieldsErrorListeners(){
+        textEdit.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                viewModel.resetErrorInputName(false)
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        })
+
+        countEdit.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                viewModel.resetErrorInputName(false)
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+        })
+
+        viewModel.errorInputCount.observe(this){
+            val message =  if(it){
+                getString(R.string.error_input_count)
+            } else {
+                null
+            }
+            textInput.error = message
+        }
+
+        viewModel.errorInputCount.observe(this){
+            val message =  if(it){
+                getString(R.string.error_input_count)
+            } else {
+                null
+            }
+            countInput.error = message
+    }
+
+
     }
 
     private fun onModeEdit() {
         viewModel.getShopItem(shopItemID)
         viewModel.shopItem.observe(this) {
-            val item = it
-            textInput.editText?.setText(item.name)
-            countInput.editText?.setText(item.count.toString())
-
+            textEdit.setText(it.name)
+            countEdit.setText(it.count.toString())
             button.setOnClickListener {
-                val newName = textEdit.text
-                val newCount = countEdit.text.toString().toInt()
-                val newShowItem = item.copy(name = newName.toString(), count = newCount)
-                viewModel.editShopItem(newShowItem)
-                viewModel.shouldCloseScreen.observe(this) {
+                viewModel.editShopItem(
+                    textEdit.text?.toString(),
+                    countEdit.text?.toString()
+                )
 
-                    if (viewModel.shouldCloseScreen.value == Unit)
-                        this.finish()
-                }
             }
+
         }
     }
 
     private fun onModeAdd() {
-        var name: String = UNDEFINED_STRING
-        var count: String = UNDEFINED_STRING
         button.setOnClickListener {
-            name = textInput.editText?.text.toString()
-            count = countInput.editText?.text.toString()
-            viewModel.addShopItem(name, count)
-            viewModel.shouldCloseScreen.observe(this) {
-                if(viewModel.shouldCloseScreen.value == Unit){
-                    this.finish()
-
-                }
-
-            }
+            viewModel.addShopItem(
+                textEdit.text?.toString(),
+                countEdit.text?.toString()
+            )
 
         }
+
+
     }
 
     private fun parseIntent() {
@@ -94,7 +144,7 @@ class ShopItemActivity : AppCompatActivity() {
         }
 
 
-        if(screenMode == MODE_EDIT){
+        if (screenMode == MODE_EDIT) {
 
             shopItemID = intent.getIntExtra(EXTRA_SHOP_ITEM_ID, UNDEFINED_VAL)
         }
