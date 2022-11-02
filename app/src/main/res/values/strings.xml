@@ -2,5 +2,6 @@
     <string name="app_name">ShoppingList</string>
     <string name="add_shop_item">add shop item</string>
     <string name="add_new_item">Add new Item</string>
-    <string name="error_input_count">ERROR</string>
+    <string name="error_input_count">ну давайте хотя бы одну штучку!</string>
+    <string name="error_input_name">Так что же Вы будете брать?</string>
 </resources>
