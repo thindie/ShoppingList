@@ -3,4 +3,6 @@
     <string name="add_shop_item">add shop item</string>
     <string name="add_new_item">Add new Item</string>
     <string name="error_input_count">ERROR</string>
+    <string name="name">Name:</string>
+    <string name="count">Count:</string>
 </resources>
