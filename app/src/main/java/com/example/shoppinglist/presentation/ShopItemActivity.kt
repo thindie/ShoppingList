@@ -33,8 +33,8 @@ class ShopItemActivity : AppCompatActivity() {
 
     private fun settingActivityMode() {
         val fragment = when (screenMode) {
-            MODE_EDIT -> ShopItemFragment.newInstanceEditItem(shopItemID)
-            MODE_ADD -> ShopItemFragment.newInstanceAddItem()
+            MODE_EDIT -> ShopItemFragment.createEditFragmentInstance(shopItemID)
+            MODE_ADD -> ShopItemFragment.createAddFragmentInstance()
             else -> throw RuntimeException("Unknown screen mode")
         }
      supportFragmentManager.beginTransaction()
