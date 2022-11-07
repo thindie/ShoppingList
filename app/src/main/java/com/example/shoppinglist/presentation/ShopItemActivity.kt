@@ -64,7 +64,7 @@ class ShopItemActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                viewModel.resetErrorInputName(false)
+                viewModel.resetErrorInputName(true)
             }
 
             override fun afterTextChanged(p0: Editable?) {
@@ -78,7 +78,9 @@ class ShopItemActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
                 viewModel.resetErrorInputCount(false)
+
             }
 
             override fun afterTextChanged(p0: Editable?) {
@@ -92,16 +94,16 @@ class ShopItemActivity : AppCompatActivity() {
             } else {
                 null
             }
-            textInput.error = message
+            countInput.error = message
         }
 
-        viewModel.errorInputCount.observe(this){
+        viewModel.errorInputName.observe(this){
             val message =  if(it){
-                getString(R.string.error_input_count)
+                getString(R.string.error_input_name)
             } else {
                 null
             }
-            countInput.error = message
+            textInput.error = message
     }
 
 

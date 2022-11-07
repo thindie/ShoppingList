@@ -28,6 +28,10 @@ class MainActivity : AppCompatActivity() {
         viewModel.shopList.observe(this) {
             shopListAdapter.submitList(it)
         }
+        settingFloatingButton()
+
+    }
+    private fun settingFloatingButton(){
         val buttonAddItem = findViewById<FloatingActionButton>(
             R.id.floatingActionButton
         )
@@ -36,7 +40,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
-
     //SETTING UP RECYCLER VIEW with CARDVIEWs inside
     private fun setupRecyclerView() {
         shopListAdapter = ShopListAdapter()
