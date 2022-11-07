@@ -28,18 +28,28 @@ class ShopItemActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shop_item)
         parseIntent()
-        viewModel = ViewModelProvider(this)
-            .get(ShopItemActivityViewModel::class.java)
-        initViews()
-        setFieldsErrorListeners()
         settingActivityMode()
     }
 
-    private fun settingActivityMode(){
-        when (screenMode) {
-            MODE_EDIT -> onModeEdit()
-            MODE_ADD -> onModeAdd()
+    private fun settingActivityMode() {
+        val fragment = when (screenMode) {
+            MODE_EDIT -> ShopItemFragment.createEditFragmentInstance(shopItemID)
+            MODE_ADD -> ShopItemFragment.createAddFragmentInstance()
+            else -> throw RuntimeException("Unknown screen mode")
         }
+     supportFragmentManager.beginTransaction()
+         .add(R.id.shop_item_container,fragment)
+         .commit()
+    }
+
+     /*   viewModel = ViewModelProvider(this)
+            .get(ShopItemActivityViewModel::class.java)
+        initViews()
+        setFieldsErrorListeners()
+
+    }
+
+
 
         viewModel.shouldCloseScreen.observe(this){
             finish()
@@ -68,7 +78,9 @@ class ShopItemActivity : AppCompatActivity() {
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                viewModel.resetErrorInputCount(true)
+
+                viewModel.resetErrorInputCount(false)
+
             }
 
             override fun afterTextChanged(p0: Editable?) {
@@ -123,7 +135,7 @@ class ShopItemActivity : AppCompatActivity() {
         }
 
 
-    }
+    }*/
 
     private fun parseIntent() {
         if (!intent.hasExtra(EXTRA_SCREEN_MODE)) {
@@ -150,6 +162,14 @@ class ShopItemActivity : AppCompatActivity() {
         }
 
     }
+        private fun initViews() {
+            textInput = findViewById(R.id.til_name)
+            countInput = findViewById(R.id.til_count)
+            textEdit = findViewById(R.id.et_name)
+            countEdit = findViewById(R.id.et_count)
+            button = findViewById(R.id.save_button)
+        }
+
 
     companion object {
         private const val EXTRA_SCREEN_MODE = "extra mode"
@@ -173,11 +193,5 @@ class ShopItemActivity : AppCompatActivity() {
         }
     }
 
-    private fun initViews() {
-        textInput = findViewById(R.id.til_name)
-        countInput = findViewById(R.id.til_count)
-        textEdit = findViewById(R.id.et_name)
-        countEdit = findViewById(R.id.et_count)
-        button = findViewById(R.id.save_button)
-    }
+
 }
