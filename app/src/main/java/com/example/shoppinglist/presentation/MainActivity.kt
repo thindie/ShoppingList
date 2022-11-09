@@ -2,6 +2,7 @@ package com.example.shoppinglist.presentation
 
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentContainerView
@@ -13,7 +14,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ShopItemFragment.OnFinishListener {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var shopListAdapter: ShopListAdapter
@@ -24,7 +25,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         doUsualOperations()
     }
-
 
     private fun settingFloatingButton() {
         val buttonAddItem = findViewById<FloatingActionButton>(
@@ -144,5 +144,10 @@ class MainActivity : AppCompatActivity() {
             shopListAdapter.submitList(it)
         }
         settingFloatingButton()
+    }
+
+    override fun onFinishListener() {
+        Toast.makeText(this,"SUCCESS", Toast.LENGTH_SHORT).show()
+        supportFragmentManager.popBackStack()
     }
 }
