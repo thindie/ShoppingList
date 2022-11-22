@@ -3,12 +3,15 @@ package com.example.shoppinglist.presentation;
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.example.shoppinglist.R
 
 
-class ShopItemActivity : AppCompatActivity() {
+
+
+class ShopItemActivity : AppCompatActivity(), ShopItemFragment.OnFinishListener {
 
     private var screenMode = UNDEFINED_STRING
     private var shopItemID = UNDEFINED_VAL
@@ -19,8 +22,9 @@ class ShopItemActivity : AppCompatActivity() {
         //DataBindingUtil.setContentView(this, R.layout.activity_shop_item)
         setContentView(R.layout.activity_shop_item)
         parseIntent()
-        if(savedInstanceState == null){
-        settingActivityMode()}
+        if (savedInstanceState == null) {
+            settingActivityMode()
+        }
     }
 
     private fun settingActivityMode() {
@@ -33,7 +37,6 @@ class ShopItemActivity : AppCompatActivity() {
             .replace(R.id.shop_item_container, fragment)
             .commit()
     }
-
 
     private fun parseIntent() {
         if (!intent.hasExtra(EXTRA_SCREEN_MODE)) {
@@ -81,5 +84,11 @@ class ShopItemActivity : AppCompatActivity() {
             intent.putExtra(EXTRA_SHOP_ITEM_ID, id)
             return intent
         }
+    }
+
+    override fun onFinishListener() {
+        Toast.makeText(this,"SUCCESS", Toast.LENGTH_SHORT).show()
+        supportFragmentManager.popBackStack()
+        this.onBackPressed()
     }
 }

@@ -1,5 +1,6 @@
 package com.example.shoppinglist.presentation
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.shoppinglist.R
@@ -23,6 +25,14 @@ class ShopItemFragment : Fragment() {
     private lateinit var button: Button
     private var screenMode = UNDEFINED_STRING
     private var shopItemID = UNDEFINED_VAL
+    private lateinit var onFinishListener: OnFinishListener
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if(context is OnFinishListener){
+            onFinishListener = activity as OnFinishListener }
+        else throw RuntimeException("Activity have to implement OnFinishListener interface")
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,18 +59,18 @@ class ShopItemFragment : Fragment() {
 
     }
 
-
     private fun settingActivityMode() {
         when (screenMode) {
             MODE_EDIT -> onModeEdit()
             MODE_ADD -> onModeAdd()
         }
-
-        viewModel.shouldCloseScreen.observe(viewLifecycleOwner) {
-             activity?.onBackPressed()
-        }
+        onEndFragment()
     }
-
+    private fun onEndFragment(){
+            viewModel.shouldCloseScreen.observe(viewLifecycleOwner){
+                onFinishListener.onFinishListener()
+            }
+    }
 
     private fun setFieldsErrorListeners() {
         textEdit.addTextChangedListener(object : TextWatcher {
@@ -168,7 +178,6 @@ class ShopItemFragment : Fragment() {
         }
     }
 
-
     companion object {
 
         private const val SCREEN_MODE = "screen_mode"
@@ -200,6 +209,9 @@ class ShopItemFragment : Fragment() {
         }
     }
 
+    interface OnFinishListener{
+        fun onFinishListener()
+    }
 
 }
 
