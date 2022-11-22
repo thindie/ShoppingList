@@ -53,7 +53,6 @@ class ShopItemActivityViewModel : ViewModel() {
     }
 
     fun getShopItem(shopItemID: Int) {
-        //-> fill fields ->
         val item = getShopItemByIdUseCase
             .getShopItem(shopItemID)
         _shopItem.postValue(item)
@@ -99,12 +98,10 @@ class ShopItemActivityViewModel : ViewModel() {
         if (name.isBlank()) {
             _errorInputName.postValue(true)
             return false
-            //todo mistake alert
         }
         if (count <= 0) {
             _errorInputCount.postValue(true)
             return false
-            //todo mistake alert
         }
         return result
     }

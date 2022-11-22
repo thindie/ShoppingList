@@ -3,20 +3,20 @@ package com.example.shoppinglist.presentation;
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
-import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import com.example.shoppinglist.R
-import com.google.android.material.textfield.TextInputLayout
 
 
 class ShopItemActivity : AppCompatActivity() {
+
     private var screenMode = UNDEFINED_STRING
     private var shopItemID = UNDEFINED_VAL
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //DataBindingUtil.setContentView(this, R.layout.activity_shop_item)
         setContentView(R.layout.activity_shop_item)
         parseIntent()
         if(savedInstanceState == null){
