@@ -1,35 +1,33 @@
 package com.example.shoppinglist.presentation
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.*
 import com.example.shoppinglist.data.ShopListRepositoryImpl
 import com.example.shoppinglist.domain.AddShopItemUseCase
 import com.example.shoppinglist.domain.EditShopItemUseCase
 import com.example.shoppinglist.domain.GetShopItemByIdUseCase
 import com.example.shoppinglist.domain.ShopItem
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
-class ShopItemActivityViewModel : ViewModel() {
+class ShopItemActivityViewModel (application: Application) : AndroidViewModel(application) {
 
-    private val repository = ShopListRepositoryImpl
+    private val repository = ShopListRepositoryImpl(application)
     private val getShopItemByIdUseCase = GetShopItemByIdUseCase(repository)
     private val addShopItemUseCase = AddShopItemUseCase(repository)
     private val editShopItemUseCase = EditShopItemUseCase(repository)
     private val _errorInputName = MutableLiveData<Boolean>()
     private val _errorInputCount = MutableLiveData<Boolean>()
+    private val scope = CoroutineScope(Dispatchers.IO)
+
 
     val errorInputName: LiveData<Boolean>
         get() = _errorInputName
 
     val errorInputCount: LiveData<Boolean>
         get() = _errorInputCount
-
-    /*this is KOTLIN LIKE hi-cast из-за того,
-    чтобы соблюдались критерии о чистой архитектуре -
-    необходимо чтобы mutablelivedata была
-    доступна только изнутри этого класса
-     для этого ее кастанули до ЛайвДаты (ее родителя)
-     где геттер приватный ---- строчки 15-19 */
 
     private val _shopItem = MutableLiveData<ShopItem>()
     val shopItem: LiveData<ShopItem>
@@ -41,35 +39,44 @@ class ShopItemActivityViewModel : ViewModel() {
 
 
     fun addShopItem(name: String?, count: String?) {
-        val nameToAdd = parseName(name)
-        val countToAdd = parseCount(count)
-        val isDataOk = validateInput(nameToAdd, countToAdd)
-        if (isDataOk) {
-            val shopItemToAdd =
-                ShopItem(nameToAdd, countToAdd, true)
-            addShopItemUseCase.addShopItem(shopItemToAdd)
-            finishScreen()
-        }
-    }
-
-    fun getShopItem(shopItemID: Int) {
-        val item = getShopItemByIdUseCase
-            .getShopItem(shopItemID)
-        _shopItem.postValue(item)
-    }
-
-    fun editShopItem(name: String?, count: String?) {
-        val nameToAdd = parseName(name)
-        val countToAdd = parseCount(count)
-        val isDataOk = validateInput(nameToAdd, countToAdd)
-        if (isDataOk) {
-            _shopItem.value?.let {
-                val shopItemToAdd = it
-                    .copy(name = nameToAdd, count = countToAdd)
-                editShopItemUseCase.editShopItem(shopItemToAdd)
+        scope.launch {
+            val nameToAdd = parseName(name)
+            val countToAdd = parseCount(count)
+            val isDataOk = validateInput(nameToAdd, countToAdd)
+            if (isDataOk) {
+                val shopItemToAdd =
+                    ShopItem(nameToAdd, countToAdd, true)
+                addShopItemUseCase.addShopItem(shopItemToAdd)
                 finishScreen()
             }
         }
+
+    }
+
+    fun getShopItem(shopItemID: Int) {
+        scope.launch {
+            val item = getShopItemByIdUseCase
+                .getShopItem(shopItemID)
+            _shopItem.postValue(item)
+        }
+
+    }
+
+    fun editShopItem(name: String?, count: String?) {
+        scope.launch {
+            val nameToAdd = parseName(name)
+            val countToAdd = parseCount(count)
+            val isDataOk = validateInput(nameToAdd, countToAdd)
+            if (isDataOk) {
+                _shopItem.value?.let {
+                    val shopItemToAdd = it
+                        .copy(name = nameToAdd, count = countToAdd)
+                    editShopItemUseCase.editShopItem(shopItemToAdd)
+                    finishScreen()
+                }
+            }
+        }
+
     }
 
     public fun resetErrorInputName(toChange: Boolean) {
@@ -109,4 +116,5 @@ class ShopItemActivityViewModel : ViewModel() {
     private fun finishScreen() {
         _shouldCloseScreen.postValue(Unit)
     }
+
 }
